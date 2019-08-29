@@ -1,50 +1,51 @@
 <template>
   <div>
-    <el-menu
-      class="categories"
-      default-active="0"
-      background-color="transparent">
-      <el-menu-item @click="changeNo('0')" style="color: gray">
-        <span slot="title" :class="{'textcolor' : activePath === '0'}">ta的资料</span>
-      </el-menu-item>
-      <el-menu-item @click="changeNo('1')" style="color: gray">
-        <span slot="title" :class="{'textcolor' : activePath === '1'}">ta的收藏</span>
-      </el-menu-item>
-      <el-menu-item @click="changeNo('2')" style="color: gray">
-        <span slot="title" :class="{'textcolor' : activePath === '3'}">ta的关注</span>
-      </el-menu-item>
-      <el-menu-item @click="changeNo('3')" style="color: gray">
-        <span slot="title" :class="{'textcolor' : activePath === '4'}">ta的粉丝</span>
-      </el-menu-item>
-      <el-menu-item @click="changeNo('4')" style="color: gray">
-        <span slot="title" :class="{'textcolor' : activePath === '5'}">ta的博客</span>
-      </el-menu-item>
-    </el-menu>
-    <OthersProfile v-if="activePath === '0'"></OthersProfile>
-    <OthersFavor v-if="activePath === '1'"></OthersFavor>
-    <OthersFollowing v-if="activePath === '2'"></OthersFollowing>
-    <OthersFollower v-if="activePath === '3'"></OthersFollower>
-    <OthersBlog v-if="activePath === '4'"></OthersBlog>
+    <el-container>
+      <el-aside width="200px">
+        <el-menu
+          class="categories"
+          default-active="activePath"
+          background-color="transparent">
+          <el-menu-item @click="gotoList('0', 'othersProfile')" style="color: gray">
+            <span slot="title" :class="{'textcolor' : activePath === '0'}">{{this.username}}的资料</span>
+          </el-menu-item>
+          <el-menu-item @click="gotoList('1', 'othersFavor')" style="color: gray">
+            <span slot="title" :class="{'textcolor' : activePath === '1'}">{{this.username}}的收藏</span>
+          </el-menu-item>
+          <el-menu-item @click="gotoList('2', 'othersFollowing')" style="color: gray">
+            <span slot="title" :class="{'textcolor' : activePath === '3'}">{{this.username}}的关注</span>
+          </el-menu-item>
+          <el-menu-item @click="gotoList('3', 'othersFollower')" style="color: gray">
+            <span slot="title" :class="{'textcolor' : activePath === '4'}">{{this.username}}的粉丝</span>
+          </el-menu-item>
+          <el-menu-item @click="gotoList('4', 'othersBlog')" style="color: gray">
+            <span slot="title" :class="{'textcolor' : activePath === '5'}">{{this.username}}的博客</span>
+          </el-menu-item>
+        </el-menu>
+      </el-aside>
+      <el-main class="content">
+        <router-view style="float: left;width: 70%"></router-view>
+      </el-main>
+    </el-container>
   </div>
 </template>
 
 <script>
-import OthersProfile from './myprofile/MyProfile'
-import OthersFavor from './myfavor/MyFavor'
-import OthersMessage from './mymessage/MyMessage'
-import OthersFollowing from './myfollowing/MyFollowing'
-import OthersFollower from './myfollower/MyFollower'
-import OthersBlog from './myblog/MyBlog'
 export default {
-  name: 'Admin',
-  components: {OthersBlog, OthersFollower, OthersFollowing, OthersFavor, OthersProfile, OthersMessage},
+  name: 'Others',
   data () {
     return {
-      activePath: '0'
+      activePath: '0',
+      username: this.$route.params.username
     }
   },
   methods: {
-    changeNo (a) {
+    gotoList: function (active, Type) {
+      this.changeActive(active)
+      this.$router.push('/user/' + this.username + '/' + Type)
+      this.reload()
+    },
+    changeActive (a) {
       this.activePath = a
     }
   }
@@ -57,6 +58,6 @@ export default {
     width: 150px;
   }
   .textcolor {
-      color: dodgerblue;
+    color: dodgerblue;
   }
 </style>

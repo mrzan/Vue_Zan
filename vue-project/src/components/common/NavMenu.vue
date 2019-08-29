@@ -3,20 +3,20 @@
     router
     mode="horizontal"
     background-color="white"
-    default-active="activePath"
+    default-active="$route.path"
     text-color="#222"
     active-text-color="red"
     style="width: 100%">
-    <el-menu-item v-on:click="changeNo(0)" index="/index">
+    <el-menu-item v-on:click="changeNo(1)" index="/index/blogList/listRecommend">
       <router-link :to="{ path: '/index'}" style="color: dodgerblue;"><p>首页</p></router-link>
     </el-menu-item>
-    <el-menu-item v-on:click="changeNo(1)" index="/search">
+    <el-menu-item v-on:click="changeNo(2)" index="/search">
       <router-link :to="{ path: '/search'}" style="color: dodgerblue;"><p>搜索</p></router-link>
     </el-menu-item>
-    <el-menu-item v-on:click="changeNo(2)" index="/write">
+    <el-menu-item v-on:click="changeNo(3)" index="/write">
       <p @click="showWarn('/write')" style="color: dodgerblue;">写博客</p>
     </el-menu-item>
-    <el-menu-item  v-on:click="changeNo(3)" index="/admin">
+    <el-menu-item  v-on:click="changeNo(4)" index="/admin/myProfile">
       <p @click="showWarn('/admin')" style="color: dodgerblue;">个人中心</p>
     </el-menu-item>
     <!--    -->
@@ -39,7 +39,7 @@ export default {
   data () {
     return {
       username: this.$store.state.user.username,
-      activePath: '0'
+      activeIndex: '1'
     }
   },
   methods: {
@@ -71,8 +71,10 @@ export default {
       }
       this.$router.replace({path: s})
     },
-    changeNo (a) {
-      this.activePath = a
+    changeNo (index) {
+      // console.log('before' + this.activeIndex)
+      this.activeIndex = index
+      // console.log('after' + this.activeIndex)
     }
   }
 }

@@ -33,7 +33,6 @@ export default {
     background-color: white;
     img {
       display: block;
-      margin-left: 200px;
       width: 100px;
       height: 100px;
       background-image: url(../../../../assets/empty.png);
@@ -42,7 +41,6 @@ export default {
     .btn {
       display: block;
       float: left;
-      margin-left: 200px;
       margin-top: 20px;
       width: 100px;
       height: 20px;

@@ -1,16 +1,18 @@
 <template>
   <div id="blog-list">
-    <h1>我的博客</h1>
+    <h1>{{this.username}}的关注</h1>
+
     <el-row :gutter="0" type="flex" justify="center">
       <!-- 单个的卡片列 -->
-      <div class="container" v-if="show">
+      <div class="container">
         <el-table style="width: 100%;"
-                  :data="blogList.slice((currentPage-1)*pagesize,currentPage*pagesize)">
+                  :data="blogList.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+        >
           <el-table-column type="index" width="50">
           </el-table-column>
-          <el-table-column label="username" prop="username" width="180">
+          <el-table-column label="user" prop="username" width="180">
           </el-table-column>
-          <el-table-column label="title" prop="title" width="180">
+          <el-table-column label="password" prop="password" width="180">
           </el-table-column>
           <el-table-column label="操作" width="180">
             <template slot-scope="scope">
@@ -34,13 +36,13 @@
 
 <script>
 export default {
-  name: 'MyBlog',
+  name: 'OthersFollowing',
   data () {
     return {
       currentPage: 1,
       pagesize: 10,
       blogList: [],
-      show: true
+      username: this.$route.params.username
     }
   },
   created: function () {
@@ -57,20 +59,16 @@ export default {
     },
     handleBlogList () {
       var self = this
-      self.$axios.post('http://localhost:8443/api/myBlogs', {
-        username: self.$store.state.user.username
+      self.$axios.post('http://localhost:8443/api/returnMyfollow', {
+        username: this.username
       })
         .then(function (response) {
           if (response.data.code === 200) {
-            self.show = true
             self.blogList = response.data.data
-          } else if (response.data.code === 400) {
-            self.show = false
+          } else {
             self.$message({
               type: 'warning',
-              message: response.data.message})
-          } else {
-            alert('code = ' + response.data.code)
+              message: 'no following'})
           }
         })
         .catch(function (error) {
@@ -78,10 +76,11 @@ export default {
         })
     },
     handleClick (row) {
-      this.$router.push('/index/blog/' + row._id)
+      this.$router.push('/admin/' + row.username)
     }
 
   }
+
 }
 </script>
 

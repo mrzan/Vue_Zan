@@ -100,7 +100,7 @@ export default {
         })
     },
     handleClick (row) {
-      this.$router.push('/user/' + row.username)
+      this.$router.push('/user/' + row.username + '/othersProfile')
     }
 
   }

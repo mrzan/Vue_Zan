@@ -1,8 +1,8 @@
 <template>
   <div>
     <br>
-    <h3 style="float: left;margin-left: 200px">个人资料</h3>
-    <hr style="margin-top: 80px;margin-left: 200px">
+    <h3 style="float: left">个人资料</h3>
+    <hr style="margin-top: 80px">
 <!--    <p style="color: gray">ID: {{userId}}</p>-->
     <avatar style="float: left"></avatar>
     <section class="box" style="float: left;margin-left: 20px;background-color: white">
@@ -13,19 +13,19 @@
       <hr style="width: 1000px">
       <p style="float: left;color: black">昵称: &nbsp;&nbsp;{{nickname}}</p>
       <div class="clear"></div>
-      <p style="float: left;color: black">性别: &nbsp;&nbsp;</p>
+      <p style="float: left;color: black">性别: &nbsp;&nbsp; {{gender}}</p>
       <div class="clear"></div>
-      <p style="float: left;color: black">生日: &nbsp;&nbsp;</p>
+      <p style="float: left;color: black">生日: &nbsp;&nbsp;{{birth}}</p>
       <div class="clear"></div>
-      <p style="float: left;color: black">地区: &nbsp;&nbsp;</p>
+      <p style="float: left;color: black">地区: &nbsp;&nbsp;{{address}}</p>
       <div class="clear"></div>
-      <p style="float: left;color: black">行业: &nbsp;&nbsp;</p>
+      <p style="float: left;color: black">行业: &nbsp;&nbsp;{{work}}</p>
       <div class="clear"></div>
-      <p style="float: left;color: black">职位: &nbsp;&nbsp;</p>
+      <p style="float: left;color: black">职位: &nbsp;&nbsp;{{position}}</p>
       <div class="clear"></div>
-      <p style="float: left;color: black">简介: &nbsp;&nbsp;</p>
+      <p style="float: left;color: black">简介: &nbsp;&nbsp;{{intro}}</p>
     </section>
-    <el-button @click="hide=false" type="text" style="float: right;margin-top: 90px;margin-right: 200px">修改资料</el-button>
+    <el-button @click="hide=false;t_nickname=nickname;t_gender=gender;t_birth=birth;t_address=address;t_work=work;t_position=position;t_intro=intro" type="text" style="float: left;margin-top: 90px;">修改资料</el-button>
     <section v-if="hide===false" class="c-avatar-cutter">
       <div class="mask"></div>
       <div class="container">
@@ -82,7 +82,7 @@
           </div>
         </div>
         <div class="c-btn-group">
-          <input @click="hide=true;t_nickname=nickname;t_truename=truename;t_gender=gender;t_birth=birth;t_address=address;t_work=work;t_position=position;t_intro=intro" type="button" class="btn-cancel" value="取消">
+          <input @click="hide=true;t_nickname=nickname;t_gender=gender;t_birth=birth;t_address=address;t_work=work;t_position=position;t_intro=intro" type="button" class="btn-cancel" value="取消">
           <input @click="uploadData" type="button" class="btn-enter" value="确定">
         </div>
       </div>
@@ -94,6 +94,7 @@
 <script>
 import Avatar from './Avatar'
 export default {
+  inject: ['reload'],
   name: 'MyProfile',
   components: {Avatar},
   data () {
@@ -102,15 +103,13 @@ export default {
       userId: this.$store.state.user.username,
       following: '0',
       followers: '0',
-      nickname: 'Dr.Cr',
-      t_nickname: 'this.nickname',
-      truename: '',
-      t_truename: '',
+      nickname: 'your nickname',
+      t_nickname: ' ',
       options: [{
-        value: '选项1',
+        value: '男',
         label: '男'
       }, {
-        value: '选项2',
+        value: '女',
         label: '女'
       }],
       gender: '',
@@ -128,33 +127,47 @@ export default {
     }
   },
   mounted () {
-    this.t_nickname = this.nickname
-    this.t_gender = this.gender
-    this.t_birth = this.birth
-    this.t_address = this.address
-    this.t_work = this.work
-    this.t_position = this.position
-    this.t_intro = this.intro
+    var self = this
+    self.$axios.post('http://localhost:8443/api/visitHome', {
+      username: self.userId
+    })
+      .then(successResponse => {
+        if (successResponse.data.code === 200) {
+          self.nickname = successResponse.data.data.ushm.nickname
+          self.gender = successResponse.data.data.ushm.gender
+          self.birth = successResponse.data.data.ushm.birth
+          self.address = successResponse.data.data.ushm.address
+          self.work = successResponse.data.data.ushm.work
+          self.position = successResponse.data.data.ushm.position
+          self.intro = successResponse.data.data.ushm.intro
+          self.followers = successResponse.data.data.fansNumber
+          self.following = successResponse.data.data.followNumber
+        } else {
+          this.$message({
+            type: 'error',
+            message: '信息错误'
+          })
+        }
+      })
+      .catch(failResponse => {
+        this.$message({
+          type: 'error',
+          message: '服务器未响应'
+        })
+      })
   },
   methods: {
     uploadData () {
       var self = this
-      console.log(self.nickname)
-      console.log(self.userId)
-      console.log(self.gender)
-      console.log(self.birth)
-      console.log(self.work)
-      console.log(self.position)
-      console.log(self.intro)
       self.$axios.post('http://localhost:8443/api/editUserHome', {
-        nickname: self.nickname,
+        nickname: self.t_nickname,
         username: self.userId,
-        gender: self.gender,
-        birth: self.birth,
-        address: self.address,
-        work: self.work,
-        position: self.position,
-        intro: self.intro
+        gender: self.t_gender,
+        birth: self.t_birth,
+        address: self.t_address,
+        work: self.t_work,
+        position: self.t_position,
+        intro: self.t_intro
       })
         .then(successResponse => {
           if (successResponse.data.code === 200) {
@@ -162,7 +175,7 @@ export default {
               type: 'success',
               message: '修改成功!'
             })
-            this.$router.replace({path: '/admin'})
+            self.reload()
           } else {
             this.$message({
               type: 'error',

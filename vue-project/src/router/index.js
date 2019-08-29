@@ -18,8 +18,12 @@ import BlogListType from '../components/blog/BlogListType'
 import MyBlog from '../components/admin/me/myblog/MyBlog'
 import MyFollower from '../components/admin/me/myfollower/MyFollower'
 import MyFollowing from '../components/admin/me/myfollowing/MyFollowing'
-import MyMessage from '../components/admin/me/mymessage/MyMessage'
 import MyProfile from '../components/admin/me/myprofile/MyProfile'
+import OthersBlog from '../components/admin/others/othersblog/OthersBlog'
+import OthersFavor from '../components/admin/others/othersfavor/OthersFavor'
+import OthersProfile from '../components/admin/others/othersprofile/OthersProfile'
+import OthersFollowing from '../components/admin/others/othersfollowing/OthersFollowing'
+import OthersFollower from '../components/admin/others/othersfollower/OthersFollower'
 
 Vue.use(Router)
 
@@ -113,11 +117,6 @@ export default new Router({
               component: MyFollowing
             },
             {
-              path: 'myMessage',
-              name: 'MyMessage',
-              component: MyMessage
-            },
-            {
               path: 'myProfile',
               name: 'MyProfile',
               component: MyProfile
@@ -137,7 +136,34 @@ export default new Router({
       component: AdminOthers,
       meta: {
         requireAuth: false
-      }
+      },
+      children: [
+        {
+          path: 'othersBlog',
+          name: 'OthersBlog',
+          component: OthersBlog
+        },
+        {
+          path: 'othersFollower',
+          name: 'OthersFollower',
+          component: OthersFollower
+        },
+        {
+          path: 'othersFollowing',
+          name: 'OthersFollowing',
+          component: OthersFollowing
+        },
+        {
+          path: 'othersProfile',
+          name: 'OthersProfile',
+          component: OthersProfile
+        },
+        {
+          path: 'othersFavor',
+          name: 'OthersFavor',
+          component: OthersFavor
+        }
+      ]
     },
     {
       path: '/login',

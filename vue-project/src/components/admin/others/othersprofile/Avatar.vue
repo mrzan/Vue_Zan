@@ -30,7 +30,9 @@ export default {
       })
         .then(function (response) {
           if (response.data.code === 200) {
-            alert(this.myUserId + ' has just followed ' + this.userId)
+            self.$message({
+              type: 'success',
+              message: this.myUserId + ' has just followed ' + this.userId})
           } else {
             alert('code = ' + response.data.code)
           }
@@ -42,13 +44,15 @@ export default {
     },
     unfollow: function () {
       var self = this
-      self.$axios.post('http://localhost:8443/api/followOne', {
+      self.$axios.post('http://localhost:8443/api/dfollowOne', {
         usernameOne: this.myUserId,
         usernameTwo: this.userId
       })
         .then(function (response) {
           if (response.data.code === 200) {
-            alert(this.myUserId + ' has just stop following ' + this.userId)
+            self.$message({
+              type: 'success',
+              message: this.myUserId + ' has just stop following ' + this.userId})
           } else {
             alert('code = ' + response.data.code)
           }
@@ -60,13 +64,12 @@ export default {
     },
     checkFollowed: function () {
       var self = this
-      self.$axios.post('http://localhost:8443/api/followOne', {
-        usernameOne: this.myUserId,
-        usernameTwo: this.userId
+      self.$axios.post('http://localhost:8443/api/DoIFollowOne', {
+        usernameOne: self.myUserId,
+        usernameTwo: self.userId
       })
         .then(function (response) {
           if (response.data.code === 200) {
-            alert(this.myUserId + ' has followed ' + this.userId)
             self.isFollowed = true
           } else {
             self.isFollowed = false

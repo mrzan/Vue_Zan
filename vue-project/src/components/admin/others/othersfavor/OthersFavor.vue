@@ -1,18 +1,17 @@
 <template>
   <div id="blog-list">
-    <h1>ta的粉丝</h1>
+    <h1>{{this.username}}的收藏</h1>
 
     <el-row :gutter="0" type="flex" justify="center">
       <!-- 单个的卡片列 -->
-      <div class="cantainer">
+      <div class="container" v-if="show">
         <el-table style="width: 100%;"
-                  :data="blogList.slice((currentPage-1)*pagesize,currentPage*pagesize)"
-        >
+                  :data="blogList.slice((currentPage-1)*pagesize,currentPage*pagesize)">
           <el-table-column type="index" width="50">
           </el-table-column>
-          <el-table-column label="user" prop="username" width="180">
+          <el-table-column label="username" prop="username" width="180">
           </el-table-column>
-          <el-table-column label="password" prop="password" width="180">
+          <el-table-column label="title" prop="title" width="180">
           </el-table-column>
           <el-table-column label="操作" width="180">
             <template slot-scope="scope">
@@ -29,27 +28,6 @@
           layout="total, sizes, prev, pager, next, jumper"
           :total="blogList.length">    //这是显示总共有多少数据，
         </el-pagination>
-        <!--      <el-col :span="6" v-for="(item, index) in blogList"-->
-        <!--              :index="index"-->
-        <!--              :key="index"-->
-        <!--              class="">&lt;!&ndash; 0 == flag || item.courseType == flag ? '' : 'hide' &ndash;&gt;-->
-        <!--        &lt;!&ndash; card div &ndash;&gt;-->
-        <!--        <router-link :to="'/index/user/' + item.username">-->
-        <!--          <div class="user" >-->
-        <!--            &lt;!&ndash; info div &ndash;&gt;-->
-        <!--            <div class="user-info">-->
-        <!--              &lt;!&ndash; class name div &ndash;&gt;-->
-        <!--              <div class="username">-->
-        <!--                {{item.username}}-->
-        <!--              </div>-->
-        <!--              &lt;!&ndash; teacher name div &ndash;&gt;-->
-        <!--              <div class="password">-->
-        <!--                {{item.password}}-->
-        <!--              </div>-->
-        <!--            </div>-->
-        <!--          </div>-->
-        <!--        </router-link>-->
-        <!--      </el-col>-->
       </div>
     </el-row>
   </div>
@@ -57,13 +35,14 @@
 
 <script>
 export default {
-  name: 'OthersFollower',
+  name: 'BlogListFollow',
   data () {
     return {
       currentPage: 1,
       pagesize: 10,
       blogList: [],
-      input: this.$route.params.input
+      show: true,
+      username: this.$route.params.username
     }
   },
   created: function () {
@@ -80,14 +59,20 @@ export default {
     },
     handleBlogList () {
       var self = this
-      self.$axios.post('http://localhost:8443/api/findByNameLike', {
-        username: this.input
+      self.$axios.post('http://localhost:8443/api/ClBlogs', {
+        username: self.username
       })
         .then(function (response) {
           if (response.data.code === 200) {
+            self.show = true
             self.blogList = response.data.data
+          } else if (response.data.code === 400) {
+            self.show = false
+            self.$message({
+              type: 'warning',
+              message: response.data.message})
           } else {
-            alert('no follower')
+            alert('code = ' + response.data.code)
           }
         })
         .catch(function (error) {
@@ -95,11 +80,10 @@ export default {
         })
     },
     handleClick (row) {
-      this.$router.push('/admin/' + row.username)
+      this.$router.push('/index/blog/' + row._id)
     }
 
   }
-
 }
 </script>
 

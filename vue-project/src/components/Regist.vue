@@ -47,12 +47,16 @@ export default {
         })
         .then(successResponse => {
           if (successResponse.data.code === 200) {
-            alert('登录成功')
+            self.$message({
+              type: 'success',
+              message: '登录成功'})
             _this.$store.commit('login', _this.registForm)
             var path = this.$route.query.redirect
             this.$router.replace({path: path === '/' || path === undefined ? '/index' : path})
           } else {
-            alert('账号密码错误')
+            self.$message({
+              type: 'warning',
+              message: '账号密码错误'})
           }
         })
         .catch(failResponse => {

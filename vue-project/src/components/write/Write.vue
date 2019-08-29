@@ -153,7 +153,7 @@ export default {
                   if (this.bid === 'goudan') {
                     this.$router.replace({path: '/index'})
                   } else {
-                    this.$router.replace({path: '/admin'})
+                    this.$router.replace({path: '/admin/myBlog'})
                   }
                 } else {
                   this.$message({

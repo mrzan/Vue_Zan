@@ -28,27 +28,6 @@
           layout="total, sizes, prev, pager, next, jumper"
           :total="blogList.length">    //这是显示总共有多少数据，
         </el-pagination>
-        <!--      <el-col :span="6" v-for="(item, index) in blogList"-->
-        <!--              :index="index"-->
-        <!--              :key="index"-->
-        <!--              class="">&lt;!&ndash; 0 == flag || item.courseType == flag ? '' : 'hide' &ndash;&gt;-->
-        <!--        &lt;!&ndash; card div &ndash;&gt;-->
-        <!--        <router-link :to="'/index/blog/' + item._id">-->
-        <!--          <div class="blog" >-->
-        <!--            &lt;!&ndash; info div &ndash;&gt;-->
-        <!--            <div class="blog-info">-->
-        <!--              &lt;!&ndash; class name div &ndash;&gt;-->
-        <!--              <div class="user">-->
-        <!--                {{item.username}}-->
-        <!--              </div>-->
-        <!--              &lt;!&ndash; teacher name div &ndash;&gt;-->
-        <!--              <div class="title">-->
-        <!--                {{item.title}}-->
-        <!--              </div>-->
-        <!--            </div>-->
-        <!--          </div>-->
-        <!--        </router-link>-->
-        <!--      </el-col>-->
       </div>
     </el-row>
   </div>
@@ -88,7 +67,9 @@ export default {
             self.blogList = response.data.data
           } else if (response.data.code === 400) {
             self.show = false
-            alert(response.data.message)
+            self.$message({
+              type: 'warning',
+              message: response.data.message})
           } else {
             alert('code = ' + response.data.code)
           }

@@ -23,7 +23,9 @@ export default {
     handleClick: function () {
       var self = this
       if (self.textarea === '') {
-        alert('评论不得为空')
+        self.$message({
+          type: 'warning',
+          message: '评论不得为空'})
       } else {
         self.$axios.post('http://localhost:8443/api/postReview', {
           content: self.textarea,
@@ -31,7 +33,9 @@ export default {
           bid: self.blog
         })
           .then(function (response) {
-            alert('成功发送评论')
+            self.$message({
+              type: 'success',
+              message: '成功发送评论'})
             self.textarea = ''
           })
           .catch(function (error) {

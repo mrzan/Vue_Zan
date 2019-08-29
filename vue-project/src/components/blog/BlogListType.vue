@@ -89,7 +89,9 @@ export default {
             self.blogList = response.data.data
           } else if (response.data.code === 400) {
             self.show = false
-            alert(response.data.message)
+            self.$message({
+              type: 'warning',
+              message: response.data.message})
           } else {
             alert('code = ' + response.data.code)
           }

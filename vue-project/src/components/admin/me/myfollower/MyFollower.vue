@@ -36,13 +36,13 @@
 
 <script>
 export default {
-  name: 'UserSearch',
+  name: 'MyFollower',
   data () {
     return {
       currentPage: 1,
       pagesize: 10,
       blogList: [],
-      input: this.$route.params.input
+      username: this.$store.state.user.username
     }
   },
   created: function () {
@@ -59,14 +59,16 @@ export default {
     },
     handleBlogList () {
       var self = this
-      self.$axios.post('http://localhost:8443/api/findByNameLike', {
-        username: this.input
+      self.$axios.post('http://localhost:8443/api/returnMyfans', {
+        username: this.username
       })
         .then(function (response) {
           if (response.data.code === 200) {
             self.blogList = response.data.data
           } else {
-            alert('no folllower')
+            self.$message({
+              type: 'warning',
+              message: 'no follower'})
           }
         })
         .catch(function (error) {
